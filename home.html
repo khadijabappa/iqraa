@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Loan System</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #2e2e2e; /* Dark background color */
+    color: #e0e0e0; /* Light text color for contrast */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0 auto 2rem; /* Center form horizontally and add bottom margin */
+    max-width: 2500px; /* Maximum width for the form */
+}
+
+
+header {
+    background-color: #1c1c1c; /* Darker shade for header */
+    color: #e0e0e0;
+    padding: 1rem 0;
+    text-align: center;
+}
+
+main {
+    flex: 1;
+    padding: 2rem;
+}
+
+h1, h2 {
+    margin: 0;
+    color: #e0e0e0;
+}
+
+.books-display {
+    margin-bottom: 2rem;
+}
+
+.books-display h2 {
+    margin-top: 0;
+    color: #f1c40f; /* Gold color for headings */
+}
+
+/* Updated styling for books container */
+.books-container {
+    display: flex;
+    flex-wrap: wrap; /* Allows wrapping of book items */
+    gap: 1rem; /* Space between items */
+    justify-content: center; /* Center items horizontally */
+    max-width: 1800px; /* Maximum width for the container */
+    margin: 0 auto; /* Center container horizontally */
+}
+
+/* Updated styling for each book */
+.book {
+    background-color: #333; /* Dark background for book containers */
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.3s;
+    width: calc(33.333% - 1rem); /* Three items per row with space for gap */
+    padding: 1rem;
+    box-sizing: border-box; /* Includes padding and border in width calculation */
+    margin: 0 auto 2rem; /* Center form horizontally and add bottom margin */
+    max-width: 600px; /* Maximum width for the form */
+}
+
+
+/* Ensure images fit properly */
+.book img {
+    width: 100%;
+    height: auto;
+    border-bottom: 1px solid #444; /* Darker border for images */
+}
+
+.book p {
+    margin: 0.5rem;
+    font-size: 1.1rem;
+    color: #e0e0e0;
+}
+
+.book:hover {
+    transform: scale(1.05);
+}
+
+/* Updated styling for loan form */
+.loan-form {
+    background-color: #1c1c1c; /* Dark background for form */
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    padding: 1rem;
+    margin: 0 auto 2rem; /* Center form horizontally and add bottom margin */
+    max-width: 800px; /* Maximum width for the form */
+}
+
+/* Form elements styling */
+form label {
+    display: block;
+    margin: 0.5rem 0 0.25rem;
+    color: #e0e0e0;
+}
+
+form input[type="text"],
+form input[type="date"],
+form select {
+    width: 98%;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid #555; /* Dark border color */
+    border-radius: 4px;
+    background-color: #333; /* Dark background for inputs */
+    color: #e0e0e0; /* Light text color */
+}
+
+form button {
+    background-color: #f1c40f; /* Gold color for button */
+    color: #1c1c1c;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #d4ac0d; /* Slightly darker gold for hover */
+}
+
+/* Loaned books section */
+.loaned-books {
+    background-color: #1c1c1c; /* Dark background for loaned books section */
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    padding: 1rem;
+    margin-top: 2rem;
+    margin: 0 auto 2rem; /* Center form horizontally and add bottom margin */
+    max-width: 1000px; /* Maximum width for the form */
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid #444; /* Darker border color for table */
+}
+
+th, td {
+    padding: 0.75rem;
+    text-align: left;
+    color: #e0e0e0;
+}
+
+thead {
+    background-color: #333; /* Dark background for table header */
+}
+
+</style>
+
+<script>
+const bookTitles = [
+    "Arbaun Hadith",
+    "Saheeh Al Bukhari",
+    "Saheeh Al Muslim",
+    "Riyaadus Saliheen",
+    "Bulugul Maraam",
+    "Musnad Imaam Ahmad"
+];
+
+// Populate the select dropdown with book titles
+const bookSelect = document.getElementById('bookTitle');
+bookTitles.forEach(title => {
+    const option = document.createElement('option');
+    option.value = title;
+    option.textContent = title;
+    bookSelect.appendChild(option);
+});
+
+// Handle book selection
+document.querySelectorAll('.book').forEach(book => {
+    book.addEventListener('click', function() {
+        const selectedTitle = this.getAttribute('data-title');
+        document.getElementById('bookTitle').value = selectedTitle;
+    });
+});
+
+document.getElementById('loanForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const bookTitle = document.getElementById('bookTitle').value;
+    const customerID = document.getElementById('customerID').value;
+    const dueDate = document.getElementById('dueDate').value;
+    const returnDate = document.getElementById('returnDate').value || 'Not Returned';
+
+    const tableBody = document.getElementById('loanedBooksTable');
+
+    const row = document.createElement('tr');
+
+    row.innerHTML = `
+        <td>${bookTitle}</td>
+        <td>${customerID}</td>
+        <td>${dueDate}</td>
+        <td>${returnDate}</td>
+    `;
+
+    tableBody.appendChild(row);
+
+    // Clear the form
+    document.getElementById('loanForm').reset();
+});
+
+</script>
+
+
+</head>
+
+<body>
+    <header>
+        <h1> <a href="http://127.0.0.1:8000/admin/" > Iqraa Library</a> </h1>
+    </header>
+    <main>
+        <section class="books-display">
+            <h1>AVAILABLE BOOKS</h1>
+             <h1> <a href="http://127.0.0.1:8000/admin/" > LOAN AVAILABLE BOOKS</a> </h1>
+            <div class="books-container">
+                <div class="book" data-title="Arbaun Hadith">
+                    <img src="https://i.postimg.cc/brfN10qv/IMG-6155.jpg">
+                    <p>Arbaun Hadith</p>
+                </div>
+                <div class="book" data-title="Saheeh Al Bukhari">
+                    <img src="https://i.postimg.cc/vmm1mvmF/IMG-6154.jpg" alt="Saheeh Al Bukhari">
+                    <p>Saheeh Al Bukhari</p>
+                </div>
+                <div class="book" data-title="Saheeh Al Muslim">
+                    <img src="https://i.postimg.cc/htZD2RK6/IMG-6157.jpg" alt="Saheeh Al Muslim">
+                    <p>Saheeh Al Muslim</p>
+                </div> <br>
+                <div class="book" data-title="Riyaadus Saliheen">
+                    <img src="https://i.postimg.cc/TYr5NwsS/IMG-6153.jpg" alt="Riyaadus Saliheen">
+                    <p>Riyaadus Saliheen</p>
+                </div>
+                <div class="book" data-title="Bulugul Maraam">
+                    <img src="https://i.postimg.cc/J4wBQJpZ/IMG-6152.jpg" alt="Bulugul Maraam">
+                    <p>Bulugul Maraam</p>
+                </div>
+                <div class="book" data-title="Musnad Imaam Ahmad">
+                    <img src="https://i.postimg.cc/HxykJvDK/IMG-6156.jpg" alt="Musnad Imaam Ahmad">
+                    <p>Musnad Imaam Ahmad</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Always visible loan form -->
+
+        </section>
+    </main>
+
+</body>
+</html>
